@@ -15,6 +15,7 @@ import samples from '../src/data/samples.json';
 import cachedModels from '../src/data/models.json';
 
 const ERR_MIC_NARROWBAND = 'Microphone transcription cannot accommodate narrowband voice models, please select a broadband one.';
+var totalMessage = [];
 
 export default React.createClass({
   displayName: 'Demo',
@@ -129,6 +130,24 @@ export default React.createClass({
     } else {
       this.dropzone.open();
     }
+  },
+
+  handleRedirect() {
+    console.log(totalMessage);
+
+    var obj = {
+      'patientid': 1,
+      'Notes': totalMessage
+      }
+
+    var str = [];
+      for (var p in obj)
+        if (obj.hasOwnProperty(p)) {
+          str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        }
+
+    var string = str.join("&");
+    window.location = 'http://localhost:5000?' + string;
   },
 
   handleUserFile(files) {
@@ -392,14 +411,17 @@ export default React.createClass({
       : null;
 
     const messages = this.getFinalAndLatestInterimResult();
-    var totalMessage = [];
     // console.log(final);
     if (messages.length > 0) {
       for (var i = 0; i < messages[0].results.length; i++) {
         totalMessage += messages[0].results[i].alternatives[0].transcript;
       }
     }
+
     console.log(totalMessage);
+
+
+
     const micBullet = (typeof window !== 'undefined' && recognizeMicrophone.isSupported) ?
       <li className="base--li">Use your microphone to record audio.</li> :
       <li className="base--li base--p_light">Use your microphone to record audio. (Not supported in current browser)</li>;// eslint-disable-line
@@ -488,6 +510,10 @@ export default React.createClass({
 
           <button className={buttonClass} onClick={this.handleUploadClick}>
             <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload A Previous Appointment
+          </button>
+
+          <button className={buttonClass} onClick={this.handleRedirect}>
+            Form
           </button>
 
         </div>
