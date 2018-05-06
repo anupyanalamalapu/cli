@@ -1,0 +1,49 @@
+<html>
+<head>
+<!-- Semantic UI -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css"/>
+        <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+
+        <!-- Gene App Script and css-->
+        <link rel="stylesheet" href="../home/home.css"/>
+        <style>
+            #cycler{position:relative;}
+            #cycler img{position:absolute;z-index:1;opacity:1}
+            #cycler img.active{}
+        </style>
+</head>
+
+	
+<body>
+
+<div id="cycler">
+<img class="active" src="image3.jpg" alt="My image" />
+<img src="image2.jpg" alt="My image" />	
+<img src="image1.jpg" alt="My image" />		
+<img src="image2.jpg" alt="My image" />	
+
+</div>
+<script>
+
+function cycleImages(){
+      var $active = $('#cycler .active');
+      var $next = ($active.next().length > 0) ? $active.next() : $('#cycler img:first');
+      $next.fadeIn().css('z-index',2);//move the next image up the pile
+      $active.fadeOut(400,function(){//fade out the top image
+
+	  $active.css('z-index',1).show().removeClass('active');//reset the z-index and unhide the image
+          $next.css('z-index',3).addClass('active');//make the next image the top one
+      });
+    }
+
+$(document).ready(function(){
+// run every 7s
+setInterval('cycleImages()', 300);
+})
+</script>
+</body>
+</html>

@@ -425,7 +425,7 @@ export default React.createClass({
     // console.log(spottedKeywords);
 
     const micBullet = (typeof window !== 'undefined' && recognizeMicrophone.isSupported) ?
-      <li className="base--li">Use your microphone to record audio.</li> :
+      <li className="base--li">Ready to start.</li> :
       <li className="base--li base--p_light">Use your microphone to record audio. (Not supported in current browser)</li>;// eslint-disable-line
 
     return (
@@ -483,9 +483,6 @@ export default React.createClass({
                 disabled={!this.supportsSpeakerLabels()}
                 id="speaker-labels"
               />
-              <label className="base--inline-label" htmlFor="speaker-labels">
-                Detect multiple speakers {this.supportsSpeakerLabels() ? '' : ' (Not supported on current model)'}
-              </label>
             </p>
 
           </div>
@@ -511,7 +508,7 @@ export default React.createClass({
           </button>
 
           <button className={buttonClass} onClick={this.handleUploadClick}>
-            <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload A Previous Appointment
+            <Icon type={this.state.audioSource === 'upload' ? 'stop' : 'upload'} /> Upload Previous
           </button>
 
           <button className={buttonClass} onClick={this.handleRedirect}>
@@ -528,18 +525,12 @@ export default React.createClass({
               ? <SpeakersView messages={messages} />
               : <Transcript messages={messages} />}
           </Pane>
-          <Pane label="Word Timings and Alternatives">
-            <TimingView messages={messages} />
-          </Pane>
           <Pane label={`Analyze ${getKeywordsSummary(this.state.settingsAtStreamStart.keywords, messages)}`}>
             <Keywords
               messages={messages}
               keywords={this.state.settingsAtStreamStart.keywords}
               isInProgress={!!this.state.audioSource}
             />
-          </Pane>
-          <Pane label="JSON">
-            <JSONView raw={this.state.rawMessages} formatted={this.state.formattedMessages} />
           </Pane>
         </Tabs>
 
