@@ -193,7 +193,6 @@ export default React.createClass({
   },
 
   handleStream(stream) {
-    console.log(stream);
     // cleanup old stream if appropriate
     if (this.stream) {
       this.stream.stop();
@@ -328,6 +327,7 @@ export default React.createClass({
   },
 
   getFinalResults() {
+    // console.log(this.state.formattedMessages.filter(r => r.results));
     return this.state.formattedMessages.filter(r => r.results &&
       r.results.length && r.results[0].final);
   },
@@ -392,6 +392,14 @@ export default React.createClass({
       : null;
 
     const messages = this.getFinalAndLatestInterimResult();
+    var totalMessage = [];
+    // console.log(final);
+    if (messages.length > 0) {
+      for (var i = 0; i < messages[0].results.length; i++) {
+        totalMessage += messages[0].results[i].alternatives[0].transcript;
+      }
+    }
+    console.log(totalMessage);
     const micBullet = (typeof window !== 'undefined' && recognizeMicrophone.isSupported) ?
       <li className="base--li">Use your microphone to record audio.</li> :
       <li className="base--li base--p_light">Use your microphone to record audio. (Not supported in current browser)</li>;// eslint-disable-line
