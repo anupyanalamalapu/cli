@@ -1,130 +1,146 @@
-<p align="center">
-<b><a href="#getting-started">Getting Started</a></b>
-|
-<b><a href="#downloads">Download</a></b>
-|
-<b><a href="#known-issues">Known Issues</a></b>
-|
-<b><a href="#filing-issues--feature-requests">Bugs/Feature Requests</a></b>
-|
-<b><a href="#plugin-development">Plugin Development</a></b>
-|
-<b><a href="#contributing--build-instructions">Contributing</a></b>
-</p>
+# Speech to Text Browser Application
 
-<img src="https://raw.githubusercontent.com/cloudfoundry/logos/master/CF_Icon_4-colour.png" alt="CF logo" height="100" align="left"/>
+[![Build Status](https://travis-ci.org/watson-developer-cloud/speech-to-text-nodejs.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/speech-to-text-nodejs)
 
-# Cloud Foundry CLI
+  The [Speech to Text][service_url] service uses IBM's speech recognition capabilities to convert speech in multiple languages into text. The transcription of incoming audio is continuously sent back to the client with minimal delay, and it is corrected as more speech is heard. The service is accessed via a WebSocket interface; a REST HTTP interface is also available;
 
-[![GitHub version](https://badge.fury.io/gh/cloudfoundry%2Fcli.svg)](https://github.com/cloudfoundry/cli/releases/latest)
-[![Documentation](https://img.shields.io/badge/docs-online-ff69b4.svg)](https://docs.cloudfoundry.org/cf-cli)
-[![Command help pages](https://img.shields.io/badge/command-help-lightgrey.svg)](https://cli.cloudfoundry.org)
-[![Slack](https://slack.cloudfoundry.org/badge.svg)](https://slack.cloudfoundry.org)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudfoundry/cli/blob/master/LICENSE)
+Node.js is also used to provide the browser client's authentication token.
 
-***Cloud Foundry CLI*** is the official command line client for [Cloud Foundry](https://cloudfoundry.org).
-Latest help of each command is [here](https://cli.cloudfoundry.org) (or run `cf help`);
-Further documentation is at the [docs page for the
-CLI](https://docs.cloudfoundry.org/cf-cli).
+[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/speech-to-text-nodejs)
 
-**Note**: CF CLI supports as far back as CF Release v251 (CAPI Release: 1.15.0 (APIs 2.69.0 and 3.4.0). See our [wiki](https://github.com/cloudfoundry/cli/wiki/Versioning-Policy#cf-cli-minimum-supported-version) for more information. If you are on an older version of CF Release, we recommend you upgrade to a supported version. 
+## Getting started
 
-If you have any questions, ask away on the #cli channel in [our Slack
-community](https://slack.cloudfoundry.org/) and the
-[cf-dev](https://lists.cloudfoundry.org/archives/list/cf-dev@lists.cloudfoundry.org/)
-mailing list, or [open a GitHub issue](https://github.com/cloudfoundry/cli/issues/new).  You can follow our development progress
-on [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/892938).
+1. You need a Bluemix account. If you don't have one, [sign up][sign_up].
 
-## Getting Started
+2. Download and install the [Cloud-foundry CLI][cloud_foundry] tool if you haven't already.
 
-Download and install the cf CLI from the [Downloads Section](#downloads).
+3. Edit the `manifest.yml` file and change `<application-name>` to something unique. The name you use determines the URL of your application. For example, `<application-name>.mybluemix.net`.
 
-Once installed, you can log in and push an app.
+  ```yaml
+  applications:
+  - services:
+    - my-service-instance
+    name: <application-name>
+    command: npm start
+    path: .
+    memory: 512M
+  ```
 
-![Example](.github/cf_example.gif)
+4. Connect to Bluemix with the command line tool.
 
-Check out our [community contributed CLI plugins](https://plugins.cloudfoundry.org) to further enhance your CLI experience.
+  ```sh
+  cf api https://api.ng.bluemix.net
+  cf login
+  ```
 
-## Downloads
+5. Create and retrieve service keys to access the [Speech to Text][service_url] service:
 
-### Installing using a package manager
+  ```none
+  cf create-service speech_to_text standard my-stt-service
+  cf create-service-key my-stt-service myKey
+  cf service-key my-stt-service myKey
+  ```
 
-**Mac OS X** and **Linux** using [Homebrew](https://brew.sh/) via the [cloudfoundry tap](https://github.com/cloudfoundry/homebrew-tap):
+6. Create a `.env` file in the root directory by copying the sample `.env.example` file using the following command:
 
-```sh
-brew install cloudfoundry/tap/cf-cli
+  ```none
+  cp .env.example .env
+  ```
+  You will update the `.env` with the information you retrieved in steps 5.
+
+  The `.env` file will look something like the following:
+
+  ```none
+  SPEECH_TO_TEXT_USERNAME=<username>
+  SPEECH_TO_TEXT_PASSWORD=<password>
+  ```
+
+7. Install the dependencies you application need:
+
+  ```none
+  npm install
+  ```
+
+8. Start the application locally:
+
+  ```none
+  npm start
+  ```
+
+9. Point your browser to [http://localhost:3000](http://localhost:3000).
+
+10. **Optional:** Push the application to Bluemix:
+
+  ```none
+  cf push
+  ```
+
+After completing the steps above, you are ready to test your application. Start a browser and enter the URL of your application.
+
+            <your application name>.mybluemix.net
+
+
+For more details about developing applications that use Watson Developer Cloud services in Bluemix, see [Getting started with Watson Developer Cloud and Bluemix][getting_started].
+
+
+## Troubleshooting
+
+* The main source of troubleshooting and recovery information is the Bluemix log. To view the log, run the following command:
+
+  ```sh
+  cf logs <application-name> --recent
+  ```
+
+* For more details about the service, see the [documentation][docs] for the Speech to Text service.
+
+
+----
+
+### Directory structure
+
+```none
+.
+├── app.js                      // express routes
+├── config                      // express configuration
+│   ├── express.js
+│   └── security.js
+├── manifest.yml
+├── package.json
+├── public                      // static resources
+├── server.js                   // entry point
+├── test                        // tests
+└── views                       // react components
 ```
 
-**Debian** and **Ubuntu** based Linux distributions:
+## License
 
-```sh
-# ...first add the Cloud Foundry Foundation public key and package repository to your system
-wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
-echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-# ...then, update your local package index, then finally install the cf CLI
-sudo apt-get update
-sudo apt-get install cf-cli
-```
+  This sample code is licensed under Apache 2.0.
 
-**Enterprise Linux** and **Fedora** systems (RHEL6/CentOS6 and up):
-```sh
-# ...first configure the Cloud Foundry Foundation package repository
-sudo wget -O /etc/yum.repos.d/cloudfoundry-cli.repo https://packages.cloudfoundry.org/fedora/cloudfoundry-cli.repo
-# ...then, install the cf CLI (which will also download and add the public key to your system)
-sudo yum install cf-cli
-```
+## Contributing
 
-### Installers and compressed binaries
+  See [CONTRIBUTING](CONTRIBUTING.md).
 
-| | Mac OS X 64 bit | Windows 64 bit | Linux 64 bit |
-| :---------------: | :---------------: |:---------------:| :------------:|
-| Installers | [pkg](https://packages.cloudfoundry.org/stable?release=macosx64&source=github) | [zip](https://packages.cloudfoundry.org/stable?release=windows64&source=github) | [rpm](https://packages.cloudfoundry.org/stable?release=redhat64&source=github) / [deb](https://packages.cloudfoundry.org/stable?release=debian64&source=github) |
-| Binaries | [tgz](https://packages.cloudfoundry.org/stable?release=macosx64-binary&source=github) | [zip](https://packages.cloudfoundry.org/stable?release=windows64-exe&source=github) | [tgz](https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github) |
+## Open Source @ IBM
+  Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
-Release notes, and 32 bit releases can be found [here](https://github.com/cloudfoundry/cli/releases).
+## Privacy Notice
 
-**Download examples** with curl for Mac OS X and Linux binaries
-```sh
-# ...download & extract Mac OS X binary
-curl -L "https://packages.cloudfoundry.org/stable?release=macosx64-binary&source=github" | tar -zx
-# ...or Linux 64-bit binary
-curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -zx
-# ...move it to /usr/local/bin or a location you know is in your $PATH
-mv cf /usr/local/bin
-# ...copy tab completion file on Ubuntu (takes affect after re-opening your shell)
-sudo curl -o /usr/share/bash-completion/completions/cf https://raw.githubusercontent.com/cloudfoundry/cli/master/ci/installers/completion/cf
-# ...and to confirm your cf CLI version
-cf --version
-```
+Sample web applications that include this package may be configured to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
 
-#### Edge binaries
-Edge binaries are *not intended for wider use*; they're for developers to test new features and fixes as they are 'pushed' and passed through the CI.
-Follow these download links for [Mac OS X 64 bit](https://packages.cloudfoundry.org/edge?arch=macosx64&source=github), [Windows 64 bit](https://packages.cloudfoundry.org/edge?arch=windows64&source=github) and [Linux 64 bit](https://packages.cloudfoundry.org/edge?arch=linux64&source=github).
+* Node.js package version
+* Node.js repository URL
+* Application Name (`application_name`)
+* Space ID (`space_id`)
+* Application Version (`application_version`)
+* Application URIs (`application_uris`)
+* Labels of bound services
+* Number of instances for each bound service and associated plan information
 
-## Known Issues
+This data is collected from the `package.json` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
-* In Cygwin and Git Bash on Windows, interactive password prompts (in `cf login`) do not work ([issue #171](https://github.com/cloudfoundry/cli/issues/171)). Please use alternative commands (`cf api` and `cf auth` to `cf login`) to work around this.
-* On Windows, `cf ssh` may not display correctly if the `TERM` is not set. We've found that setting `TERM` to `msys` fixes some of these issues.
-* CF CLI/GoLang do not use OpenSSL. Custom/Self Signed Certificates need to be [installed in specific locations](https://docs.cloudfoundry.org/cf-cli/self-signed.html) in order to `login`/`auth` without `--skip-ssl-validation`.
-* API tracing to terminal (using `CF_TRACE=true`, `-v` option or `cf config --trace`) doesn't work well with some CLI plugin commands. Trace to file works fine. On Linux, `CF_TRACE=/dev/stdout` works too. See [this Diego-Enabler plugin issue](https://github.com/cloudfoundry-attic/Diego-Enabler/issues/6) for more information.
-* .cfignore used in `cf push` must be in UTF-8 encoding for CLI to interpret correctly.
-* On Linux, when encountering message "bash: .cf: No such file or directory", ensure that you're using the [correct binary or installer for your architecture](https://askubuntu.com/questions/133389/no-such-file-or-directory-but-the-file-exists).
-* Using non-refactored commands with verbose mode turned on will display the refresh token in the terminal.
-
-## Filing Issues & Feature Requests
-
-First, update to the [latest cli](https://github.com/cloudfoundry/cli/releases)
-and try the command again.
-
-If the error remains or feature still missing, check the [open issues](https://github.com/cloudfoundry/cli/issues) and if not already raised please file a new issue with the requested details.
-
-## Plugin Development
-
-For development guide on writing a cli plugin, see [here](https://github.com/cloudfoundry/cli/tree/master/plugin/plugin_examples).
-
-## Contributing & Build Instructions
-
-Please read the [contributors' guide](.github/CONTRIBUTING.md)
-
-If you'd like to submit updated translations, please see the [i18n README](https://github.com/cloudfoundry/cli/blob/master/cf/i18n/README-i18n.md) for instructions on how to submit an update.
-
+[deploy_track_url]: https://github.com/cloudant-labs/deployment-tracker
+[cloud_foundry]: https://github.com/cloudfoundry/cli
+[getting_started]: https://www.ibm.com/watson/developercloud/doc/common/index.html
+[service_url]: https://www.ibm.com/watson/services/speech-to-text/
+[docs]: http://www.ibm.com/watson/developercloud/speech-to-text/
+[sign_up]: https://console.bluemix.net/registration/
