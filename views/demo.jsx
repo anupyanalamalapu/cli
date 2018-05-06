@@ -149,7 +149,7 @@ export default React.createClass({
         }
 
     var string = str.join("&");
-    window.location = 'http://localhost:5000?' + string;
+    window.location = 'http://localhost:5000/appointment/profile?' + string;
   },
 
   handleUserFile(files) {
@@ -523,7 +523,7 @@ export default React.createClass({
         {err}
 
         <Tabs selected={0}>
-          <Pane label="Text">
+          <Pane label={"Dialogue"}>
             {this.state.settingsAtStreamStart.speakerLabels
               ? <SpeakersView messages={messages} />
               : <Transcript messages={messages} />}
@@ -531,7 +531,7 @@ export default React.createClass({
           <Pane label="Word Timings and Alternatives">
             <TimingView messages={messages} />
           </Pane>
-          <Pane label={`Keywords ${getKeywordsSummary(this.state.settingsAtStreamStart.keywords, messages)}`}>
+          <Pane label={`Analyze ${getKeywordsSummary(this.state.settingsAtStreamStart.keywords, messages)}`}>
             <Keywords
               messages={messages}
               keywords={this.state.settingsAtStreamStart.keywords}
