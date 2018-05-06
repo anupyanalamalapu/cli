@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'watson-react-components';
 
+
+var spottedKeywords; 
+var totalKeywords = [];
+
 // reducer to convert a list of messages into a (flat) list of results
 function allResultsReducer(list, message) {
   return list.concat(message.results);
@@ -47,6 +51,16 @@ export function Keywords(props) {
       </li>
     );
   });
+  spottedKeywords = spotted;
+  const tifOptions = Object.keys(spottedKeywords).map(key => 
+      <option value={key}>{spottedKeywords[key]}</option>
+  )
+  for (var i = 0; i < tifOptions.length; i++) {
+    totalKeywords += tifOptions[i].props.value + ' ';
+  }
+
+  console.log(totalKeywords);
+
   return (
     <div>
       <ul className="base--ul base--ul_no-bullets">
@@ -67,3 +81,6 @@ export function getKeywordsSummary(keywords, messages) {
   const total = keywords.length;
   return `(${spotted}/${total})`;
 }
+
+export {totalKeywords};
+

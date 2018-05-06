@@ -7,7 +7,7 @@ import recognizeFile from 'watson-speech/speech-to-text/recognize-file';
 
 import ModelDropdown from './model-dropdown.jsx';
 import Transcript from './transcript.jsx';
-import { Keywords, getKeywordsSummary } from './keywords.jsx';
+import { Keywords, getKeywordsSummary, totalKeywords } from './keywords.jsx';
 import SpeakersView from './speaker.jsx';
 import TimingView from './timing.jsx';
 import JSONView from './json-view.jsx';
@@ -16,6 +16,7 @@ import cachedModels from '../src/data/models.json';
 
 const ERR_MIC_NARROWBAND = 'Microphone transcription cannot accommodate narrowband voice models, please select a broadband one.';
 var totalMessage = [];
+
 
 export default React.createClass({
   displayName: 'Demo',
@@ -72,6 +73,7 @@ export default React.createClass({
 
   getRecognizeOptions(extra) {
     const keywords = this.getKeywordsArrUnique();
+    // console.log(keywords);
     return Object.assign({
       // formats phone numbers, currency, etc. (server-side)
       token: this.state.token,
@@ -133,11 +135,11 @@ export default React.createClass({
   },
 
   handleRedirect() {
-    console.log(totalMessage);
+    console.log(totalKeywords);
 
     var obj = {
       'patientid': 1,
-      'Notes': totalMessage
+      'Notes': totalKeywords
       }
 
     var str = [];
@@ -298,7 +300,6 @@ export default React.createClass({
     this.setState({ model,
       keywords: this.getKeywords(model),
       speakerLabels: this.supportsSpeakerLabels(model) });
-
     // clear the microphone narrowband error if it's visible and a broadband model was just selected
     if (this.state.error === ERR_MIC_NARROWBAND && !this.isNarrowBand(model)) {
       this.setState({ error: null });
@@ -329,6 +330,7 @@ export default React.createClass({
 
   // cleans up the keywords string into an array of individual, trimmed, non-empty keywords/phrases
   getKeywordsArr() {
+    console.log(this.state.keywords);
     return this.state.keywords.split(',').map(k => k.trim()).filter(k => k);
   },
 
@@ -420,7 +422,7 @@ export default React.createClass({
 
     console.log(totalMessage);
 
-
+    // console.log(spottedKeywords);
 
     const micBullet = (typeof window !== 'undefined' && recognizeMicrophone.isSupported) ?
       <li className="base--li">Use your microphone to record audio.</li> :
