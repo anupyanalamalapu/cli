@@ -1,4 +1,8 @@
 ---
 applications:
-- name: from-default-manifest
-  memory: 256mb
+- services:
+  - my-service-instance
+  name: afya
+  command: npm start
+  path: .
+  memory: 512M
