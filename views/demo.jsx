@@ -433,19 +433,11 @@ export default React.createClass({
           {micBullet}
         </ul>
 
-        <div className="smalltext">
-          {'*Both US English broadband sample audio files are covered under the Creative Commons license.'}
-        </div>
-
         <div style={{
           paddingRight: '3em',
           paddingBottom: '2em',
         }}
         >
-          The returned result includes the recognized text, {' '}
-          <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#word_alternatives">word alternatives</a>, {' '}
-          and <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#keyword_spotting">spotted keywords</a>. {' '}
-          Some models can <a className="base--a" href="https://console.bluemix.net/docs/services/speech-to-text/output.html#speaker_labels">detect multiple speakers</a>; this may slow down performance.
         </div>
         <div className="flex setup">
           <div className="column">

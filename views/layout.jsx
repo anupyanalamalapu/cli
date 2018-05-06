@@ -18,8 +18,6 @@ export default function Layout(props) {
         <Header
           mainBreadcrumbs="Afya"
           mainBreadcrumbsUrl="."
-          subBreadcrumbs="Speech to Text Demo"
-          subBreadcrumbsUrl="https://speech-to-text-demo.mybluemix.net"
         />
         <div id="root">
           {props.children}
